@@ -6,7 +6,7 @@ Each helper writes one file for one item; the orchestrator (#13) owns the
 
 from pathlib import Path
 
-from docling_core.types.doc import TextItem
+from docling_core.types.doc import PictureItem, TableItem, TextItem
 from docling_core.types.doc.labels import DocItemLabel
 
 
@@ -63,5 +63,33 @@ def write_figure_item(item, doc, out_dir, index) -> list[Path]:
         cap_path = out_dir / f"figure_{index:03d}_caption.txt"
         cap_path.write_text(caption)
         written.append(cap_path)
+
+    return written
+
+
+def write_elements(doc, out_dir: Path) -> list[Path]:
+    """Create ``out_dir/elements/``, iterate ``doc.iterate_items()`` and dispatch
+    each item to the per-type writer, returning the flat list of written paths.
+
+    Text/equation, table, and figure indices increment independently.
+    """
+    elements_dir = out_dir / "elements"
+    elements_dir.mkdir(parents=True, exist_ok=True)
+
+    written: list[Path] = []
+    text_idx = table_idx = figure_idx = 1
+
+    for element, _level in doc.iterate_items():
+        if isinstance(element, TextItem):
+            path = write_text_item(element, doc, elements_dir, text_idx)
+            text_idx += 1
+            if path is not None:
+                written.append(path)
+        elif isinstance(element, TableItem):
+            written.append(write_table_item(element, doc, elements_dir, table_idx))
+            table_idx += 1
+        elif isinstance(element, PictureItem):
+            written.extend(write_figure_item(element, doc, elements_dir, figure_idx))
+            figure_idx += 1
 
     return written
