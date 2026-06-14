@@ -7,7 +7,7 @@ keys, no data leaves your machine**.
 Standard PDF-to-text tools flatten multi-column layouts, numbered equations, complex
 tables, and captioned figures into unstructured strings, destroying the semantic structure
 that makes papers useful for LLMs, search, and RAG. This tool lets a researcher drop a
-batch of PDFs into a file picker and receive, per paper: a lossless JSON store, an HTML
+batch of PDFs into a file picker and receive, per paper: an HTML
 render with MathML equations and real `<table>` elements, extracted figure PNGs with
 caption files, and per-element flat files (LaTeX equations, HTML tables, plain-text
 sections).
@@ -56,7 +56,6 @@ Each input `smith2023.pdf` produces a folder mirroring its name:
 <output_dir>/
   batch_summary.json
   smith2023/
-    docling.json          # lossless DoclingDocument (re-serialize later without re-parsing)
     document.html         # MathML equations + real <table> elements
     document.md           # human-readable Markdown
     elements/

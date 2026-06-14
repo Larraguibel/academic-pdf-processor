@@ -7,7 +7,6 @@ not abort a batch — and returns a :class:`ProcessingResult`.
 from pathlib import Path
 
 from apdf.job import ProcessingResult
-from apdf.serializers.json_serializer import write_json
 from apdf.serializers.html_serializer import write_html
 from apdf.serializers.markdown_serializer import write_markdown
 from apdf.serializers.elements import write_elements
@@ -30,7 +29,6 @@ class DoclingProcessor:
             doc = result.document
 
             outputs: list[Path] = []
-            outputs.append(write_json(doc, out_dir))
             outputs.append(write_html(doc, out_dir))
             outputs.append(write_markdown(doc, out_dir))
             outputs.extend(write_elements(doc, out_dir))
