@@ -1,0 +1,41 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+*.so
+
+# ---- Virtual environments ----
+.venv/
+venv/
+env/
+ENV/
+
+# ---- Docling model cache ----
+# Docling downloads model weights (~few-hundred MB) to ~/.cache/docling/models on
+# first run. That lives in $HOME, not the repo, but ignore any local copies just in case.
+.cache/
+*.docling-cache
+
+# ---- App outputs ----
+outputs/
+
+# ---- Test corpus (user-supplied; copyrighted papers kept out of git) ----
+test_pdfs/
+
+# ---- Tooling / coverage ----
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ---- OS files ----
+.DS_Store
+Thumbs.db
+
+# ---- Local agent/harness state ----
+.claude/
