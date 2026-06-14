@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "academic-pdf-processor"
+version = "0.1.0"
+description = "Desktop app that converts academic PDFs into structured outputs using Docling."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "docling==2.102.1",
+    "pillow",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+academic-pdf-processor = "app:main"
+
+[tool.setuptools]
+packages = ["apdf", "apdf.serializers", "apdf.ui"]
+py-modules = ["app"]
+
+[tool.pytest.ini_options]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]

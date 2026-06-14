@@ -1,0 +1,6 @@
+# Runtime dependencies
+docling==2.102.1
+pillow
+
+# Dev dependencies (install manually): pytest
+# pytest
