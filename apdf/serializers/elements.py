@@ -27,3 +27,14 @@ def write_text_item(item, doc, out_dir, index) -> Path | None:
         path = out_dir / f"text_{index:03d}.txt"
     path.write_text(text)
     return path
+
+
+def write_table_item(item, doc, out_dir, index) -> Path:
+    """Write a ``TableItem`` as a standalone ``table_{index:03d}.html`` snippet.
+
+    The ``doc=`` argument is mandatory in Docling v2. Returns the written ``Path``.
+    """
+    html: str = item.export_to_html(doc=doc, add_caption=True)
+    path = out_dir / f"table_{index:03d}.html"
+    path.write_text(html)
+    return path
