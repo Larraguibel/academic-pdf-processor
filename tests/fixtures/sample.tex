@@ -1,0 +1,40 @@
+% Synthetic test fixture for the Academic PDF Processor integration test.
+% Public-domain / freely usable: written from scratch, contains no copyrighted text.
+% Compile with: pdflatex sample.tex
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\pagestyle{empty}
+\begin{document}
+
+\section*{Synthetic Fixture}
+
+This tiny document exists only to exercise the conversion pipeline. It contains
+one display equation and one table so the integration test can assert that the
+converter produces at least one \texttt{FORMULA} node and at least one table node.
+
+The Gaussian integral has the well-known closed form shown below:
+
+\begin{equation}
+\int_{-\infty}^{\infty} e^{-\alpha x^{2}} \, dx
+  = \sqrt{\frac{\pi}{\alpha}}, \qquad \alpha > 0 .
+\end{equation}
+
+Table~\ref{tab:results} reports a few synthetic measurements.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\toprule
+Method & Accuracy & Time (s) \\
+\midrule
+Baseline & 0.71 & 12.4 \\
+Improved & 0.84 & 15.9 \\
+Proposed & 0.92 & 11.2 \\
+\bottomrule
+\end{tabular}
+\caption{Synthetic results for the test fixture.}
+\label{tab:results}
+\end{table}
+
+\end{document}
