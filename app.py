@@ -2,13 +2,21 @@
 
 Run with: python app.py
 
-This is currently a placeholder stub (wave 0). The Tkinter UI is wired up in
-later issues (#17 builds the window, #18 wires the worker thread).
+Opens the Tkinter window. The Run button is wired to a background worker thread
+in issue #18.
 """
+
+import tkinter as tk
+
+from apdf.progress import ProgressReporter
+from apdf.ui.main_window import MainWindow
 
 
 def main() -> None:
-    print("Academic PDF Processor — TODO: UI not implemented yet (see issues #17, #18).")
+    root = tk.Tk()
+    reporter = ProgressReporter()
+    MainWindow(root, reporter)
+    root.mainloop()
 
 
 if __name__ == "__main__":
