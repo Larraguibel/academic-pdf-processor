@@ -38,3 +38,30 @@ def write_table_item(item, doc, out_dir, index) -> Path:
     path = out_dir / f"table_{index:03d}.html"
     path.write_text(html)
     return path
+
+
+def write_figure_item(item, doc, out_dir, index) -> list[Path]:
+    """Write a ``PictureItem``'s cropped image and caption.
+
+    Saves ``figure_{index:03d}.png`` (when a retained image exists) and, if a
+    caption is present, ``figure_{index:03d}_caption.txt``. Returns the list of
+    written ``Path``s. ``get_image(doc)`` may be ``None`` (figures are only
+    retained when the converter was built with ``generate_picture_images=True``
+    + ``images_scale``); that case is skipped gracefully.
+    """
+    written: list[Path] = []
+
+    img = item.get_image(doc)                 # -> Optional[PIL.Image]
+    if img is not None:
+        png_path = out_dir / f"figure_{index:03d}.png"
+        with open(png_path, "wb") as fp:
+            img.save(fp, "PNG")
+        written.append(png_path)
+
+    caption = item.caption_text(doc)          # -> str (concatenated captions)
+    if caption:
+        cap_path = out_dir / f"figure_{index:03d}_caption.txt"
+        cap_path.write_text(caption)
+        written.append(cap_path)
+
+    return written
