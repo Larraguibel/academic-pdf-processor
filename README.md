@@ -48,6 +48,12 @@ status (succeeded / failed / skipped) are shown in the in-app log.
 > on CPU** (Docling excludes MPS for that stage), so equation extraction is the slowest
 > part of a run. The app logs the detected device at startup.
 
+> ℹ️ **OCR is automatic.** Born-digital PDFs (arXiv, LaTeX/Word exports) already carry a
+> text layer, so OCR is skipped — it would only add a slow, error-prone pass. The app
+> probes each PDF's text layer and enables OCR **only** for scanned/image-only documents.
+> Files that used OCR are flagged in the log (`✓ name (OCR — scanned PDF)`) and in
+> `batch_summary.json` (`"ocr": true`).
+
 ## Output structure
 
 Each input `smith2023.pdf` produces a folder mirroring its name:

@@ -27,8 +27,9 @@ class MainWindow:
         self._pdf_paths: list[Path] = []
         self._output_dir: str = self._config.get("last_output_dir", "")
 
-        # Worker state: the single shared converter is built lazily on first Run.
-        self._converter = None
+        # Worker state: the converter pool builds OCR-off/OCR-on converters
+        # lazily and is reused across runs.
+        self._pool = None
         self._batch_done = True
         # Run handler — wired to the worker thread; still overridable for tests.
         self.on_run = self.start_run
@@ -124,12 +125,12 @@ class MainWindow:
         """
         try:
             from apdf.batch import BatchRunner
-            from apdf.converter import build_converter
+            from apdf.converter import ConverterPool
             from apdf.processor import DoclingProcessor
 
-            if self._converter is None:
-                self._converter = build_converter()
-            processor = DoclingProcessor(self._converter)
+            if self._pool is None:
+                self._pool = ConverterPool()
+            processor = DoclingProcessor(self._pool)
             BatchRunner(processor, self.reporter).run(job)
         except Exception as exc:  # noqa: BLE001 — surface, then let the batch end
             self.reporter.emit(
@@ -143,7 +144,8 @@ class MainWindow:
                 self.append_log(f"[{ev.index}/{ev.total}] Processing {ev.name}…")
                 self.set_progress(ev.index - 1, ev.total)
             elif ev.type == EventType.FILE_DONE:
-                self.append_log(f"  ✓ {ev.name}")
+                suffix = " (OCR — scanned PDF)" if ev.message == "ocr" else ""
+                self.append_log(f"  ✓ {ev.name}{suffix}")
                 self.set_progress(ev.index, ev.total)
             elif ev.type == EventType.FILE_FAILED:
                 self.append_log(f"  ✗ {ev.name}: {ev.message}")

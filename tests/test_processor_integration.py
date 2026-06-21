@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from apdf.converter import build_converter
+from apdf.converter import ConverterPool
 from apdf.processor import DoclingProcessor
 
 FIXTURE = Path(__file__).parent / "fixtures" / "sample.pdf"
@@ -24,12 +24,13 @@ def _count_elements(out_dir: Path) -> tuple[int, int]:
 
 @pytest.mark.slow
 def test_real_pdf_produces_structured_outputs(tmp_path):
-    converter = build_converter()
-    processor = DoclingProcessor(converter)
+    processor = DoclingProcessor(ConverterPool())
 
     result = processor.process(FIXTURE, tmp_path)
 
     assert result.ok, result.error
+    # The fixture is born-digital, so OCR must not be auto-enabled.
+    assert result.ocr is False
 
     n_tables, n_formula = _count_elements(tmp_path)
     assert n_tables >= 1, f"expected >=1 table element, got {n_tables}"

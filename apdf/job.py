@@ -21,3 +21,4 @@ class ProcessingResult:
     name: str                       # input stem, e.g. "smith2023"
     outputs: tuple[Path, ...] = ()  # files/dirs written for this PDF
     error: str | None = None        # error message when ok is False
+    ocr: bool = False               # True if OCR was auto-enabled (scanned PDF)

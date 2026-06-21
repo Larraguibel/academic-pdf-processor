@@ -64,6 +64,31 @@ def build_converter(
     return converter
 
 
+class ConverterPool:
+    """Lazily build and cache one converter per OCR setting, reused across a batch.
+
+    ``do_ocr`` is baked into a converter's pipeline at construction, so OCR can't
+    be toggled per call on a single converter. The processor decides per PDF
+    whether OCR is needed (see :func:`apdf.detect.is_scanned_pdf`) and asks the
+    pool for the matching converter. A born-digital batch only ever builds the
+    OCR-off converter; the OCR-on one is built the first time a scanned PDF
+    appears, then reused.
+
+    Converters are not thread-safe — use one pool from a single worker thread.
+    """
+
+    def __init__(self, build=build_converter):
+        self._build = build
+        self._cache: dict[bool, DocumentConverter] = {}
+
+    def get(self, do_ocr: bool = False) -> DocumentConverter:
+        """Return the cached converter for ``do_ocr``, building it on first use."""
+        if do_ocr not in self._cache:
+            logger.info("Building Docling converter (do_ocr=%s)", do_ocr)
+            self._cache[do_ocr] = self._build(do_ocr=do_ocr)
+        return self._cache[do_ocr]
+
+
 def detect_device() -> str:
     """Return a short label for the accelerator AUTO will select, and log it.
 

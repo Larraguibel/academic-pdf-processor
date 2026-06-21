@@ -56,7 +56,13 @@ class BatchRunner:
             if result.ok:
                 succeeded += 1
                 self._reporter.emit(
-                    ProgressEvent(EventType.FILE_DONE, name=name, index=index, total=total)
+                    ProgressEvent(
+                        EventType.FILE_DONE,
+                        name=name,
+                        index=index,
+                        total=total,
+                        message="ocr" if result.ocr else "",
+                    )
                 )
             else:
                 failed += 1
@@ -95,6 +101,7 @@ class BatchRunner:
                 {
                     "name": r.name,
                     "ok": r.ok,
+                    "ocr": r.ocr,
                     "error": r.error,
                     "outputs": [str(p) for p in r.outputs],
                 }
